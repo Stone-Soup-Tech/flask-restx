@@ -15,12 +15,11 @@ except ImportError:
 from six import string_types, itervalues, iteritems, iterkeys
 
 from flask import current_app
-from werkzeug.routing import parse_rule
 
 from . import fields
 from .model import Model, ModelBase, OrderedModel
 from .reqparse import RequestParser
-from .utils import merge, not_none, not_none_sorted
+from .utils import merge, not_none, not_none_sorted, parse_rule
 from ._http import HTTPStatus
 
 try:
