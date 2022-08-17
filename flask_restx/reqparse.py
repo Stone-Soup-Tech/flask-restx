@@ -138,22 +138,24 @@ class Argument(object):
         :param request: The flask request object to parse arguments from
         """
         if isinstance(self.location, six.string_types):
-            value = getattr(request, self.location, MultiDict())
-            if callable(value):
-                value = value()
-            if value is not None:
-                return value
+            _args_location = [self.location]
         else:
-            values = MultiDict()
-            for l in self.location:
+            _args_location = self.location
+
+        values = MultiDict()
+        for l in _args_location:
+            if l == 'json' and hasattr(request, 'get_json'):
+                # NOTE: workaround on the fact the previous implementation was
+                # depending on `werkzeug.wrapper.Request.json` not to raise errors
+                # but fallback to `None` values
+                value = request.get_json(silent=True)
+            else:
                 value = getattr(request, l, None)
                 if callable(value):
                     value = value()
-                if value is not None:
-                    values.update(value)
-            return values
-
-        return MultiDict()
+            if value is not None:
+                values.update(value)
+        return values
 
     def convert(self, value, op):
         # Don't cast None
