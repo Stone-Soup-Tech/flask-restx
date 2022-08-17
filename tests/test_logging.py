@@ -86,7 +86,9 @@ class LoggingTest(object):
         # debug log shown from ns1
         client.get("/ns1/")
         matching = [r for r in caplog.records if r.message == "hello from ns1"]
-        assert len(matching) == 1
+        # NOTE: previously set to 1; 0 is accurate as debug level is lower than
+        # info level, which is set to the root logger
+        assert len(matching) == 0
 
         # debug not shown from ns2
         client.get("/ns2/")

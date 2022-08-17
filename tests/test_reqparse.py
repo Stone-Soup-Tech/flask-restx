@@ -79,6 +79,7 @@ class ReqParseTest(object):
         req = mocker.Mock()
         req.values = ()
         req.json = None
+        req.get_json.return_value = None
         req.view_args = {"foo": "bar"}
         parser = RequestParser()
         parser.add_argument("foo", store_missing=True)
