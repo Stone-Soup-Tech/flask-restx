@@ -25,7 +25,7 @@ class ReqParseTest(object):
         model = Model("Todo", {"task": fields.String(required=True)})
 
         parser = RequestParser()
-        parser.add_argument("todo", type=model, required=True)
+        parser.add_argument("todo", type=model, required=True, location="json")
 
         data = {"todo": {"task": "aaa"}}
 
@@ -102,7 +102,12 @@ class ReqParseTest(object):
             args = parser.parse_args()
             assert args["foo"] == "barß"
 
-    @pytest.mark.request_context("/bubble", method="post")
+    @pytest.mark.request_context(
+        "/bubble",
+        method="post",
+        data=json.dumps({}),
+        content_type="application/json",
+    )
     def test_json_location(self):
         parser = RequestParser()
         parser.add_argument("foo", location="json", store_missing=True)
@@ -613,8 +618,8 @@ class ReqParseTest(object):
 
     def test_both_json_and_values_location(self, app):
         parser = RequestParser()
-        parser.add_argument("foo", type=int)
-        parser.add_argument("baz", type=int)
+        parser.add_argument("foo", type=int, location="values")
+        parser.add_argument("baz", type=int, location="json")
         with app.test_request_context(
             "/bubble?foo=1",
             method="post",
