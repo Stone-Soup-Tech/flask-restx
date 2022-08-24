@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 jobs:
   # checks:
-  #   runs-on: ubuntu-latest
+  #   runs-on: ubuntu-20.04
   #   steps:
   #     - name: Set up Python 3.8
   #       uses: actions/setup-python@v1
@@ -44,7 +44,7 @@ jobs:
   #         fi
   #         echo ${RES}
   unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: [3.8, '3.10']
@@ -67,7 +67,7 @@ jobs:
           file: ./coverage.xml
   bench:
     needs: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     if: github.event_name == 'pull_request'
     steps:
       - name: Set up Python 3.8
