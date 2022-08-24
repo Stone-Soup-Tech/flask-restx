@@ -11,20 +11,6 @@ from werkzeug.wrappers import Request
 
 from ._http import HTTPStatus
 
-_rule_re = re.compile(
-    r"""
-    (?P<static>[^<]*)                           # static rule data
-    <
-    (?:
-        (?P<converter>[a-zA-Z_][a-zA-Z0-9_]*)   # converter name
-        (?:\((?P<args>.*?)\))?                  # converter arguments
-        \:                                      # variable delimiter
-    )?
-    (?P<variable>[a-zA-Z_][a-zA-Z0-9_]*)        # variable name
-    >
-    """,
-    re.VERBOSE,
-)
 FIRST_CAP_RE = re.compile("(.)([A-Z][a-z]+)")
 ALL_CAP_RE = re.compile("([a-z0-9])([A-Z])")
 
@@ -150,10 +136,24 @@ def parse_rule(rule: str) -> t.Iterator[t.Tuple[t.Optional[str], t.Optional[str]
     """
     pos = 0
     end = len(rule)
-    do_match = _rule_re.match
     used_names = set()
+    rule_re = re.compile(
+        r"""
+        (?P<static>[^<]*)                           # static rule data
+        <
+        (?:
+            (?P<converter>[a-zA-Z_][a-zA-Z0-9_]*)   # converter name
+            (?:\((?P<args>.*?)\))?                  # converter arguments
+            \:                                      # variable delimiter
+        )?
+        (?P<variable>[a-zA-Z_][a-zA-Z0-9_]*)        # variable name
+        >
+        """,
+        re.VERBOSE,
+    )
+
     while pos < end:
-        m = do_match(rule, pos)
+        m = rule_re.match(rule, pos)
         if m is None:
             break
         data = m.groupdict()
