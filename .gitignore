@@ -41,8 +41,9 @@ histograms/
 # Translations
 *.mo
 
-# Atom
+# IDEs
 *.cson
+.vscode
 
 # Mr Developer
 .mr.developer.cfg
@@ -65,6 +66,7 @@ node_modules
 
 # pyenv
 .python-version
+venv
 
 # Jet Brains
 .idea

@@ -106,7 +106,7 @@ class Argument(object):
         required=False,
         ignore=False,
         type=text_type,
-        location=("json", "values",),
+        location=("values",),
         choices=(),
         action="store",
         help=None,
@@ -154,6 +154,7 @@ class Argument(object):
             return values
 
         return MultiDict()
+
 
     def convert(self, value, op):
         # Don't cast None

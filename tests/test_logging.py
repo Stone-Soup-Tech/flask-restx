@@ -66,6 +66,10 @@ class LoggingTest(object):
     def test_override_app_level(self, app, client, caplog):
         caplog.set_level(logging.INFO, logger=app.logger.name)
 
+        # NOTE: set it as 'not set' in order to catch all records that logers
+        # are allowed to log
+        caplog.handler.setLevel(logging.NOTSET)
+
         api = restx.Api(app)
         ns1 = api.namespace("ns1", path="/ns1")
         ns1.logger.setLevel(logging.DEBUG)
